@@ -1,0 +1,65 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Item Details</title>
+    <style>
+      body {
+          font-family: Arial, sans-serif;
+          padding: 20px;
+      }
+
+      .product-tab {
+          border: 1px solid #ccc;
+          border-radius: 5px;
+          padding: 20px;
+          margin-bottom: 20px;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+          transition: box-shadow 0.3s ease;
+      }
+
+      .product-tab:hover {
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      }
+
+      .product-tab img {
+          max-width: 100%;
+          height: auto;
+      }
+    </style>
+</head>
+<body>
+    <div id="authContainer"></div>
+    <div id="itemDetails"></div>
+
+    <script src="Login_Logout.js"></script>
+    <script>
+        const itemDetails = document.getElementById('itemDetails');
+        const urlParams = new URLSearchParams(window.location.search);
+        const itemId = urlParams.get('id');
+
+        fetch(`https://fakestoreapi.com/products/${itemId}`)
+            .then(res => {
+              if (!res.ok) {
+                throw new Error(`HTTP error! Status: ${res.status}`);
+              }
+              return res.json();
+            })
+            .then(data => {
+                const productTab = `
+                    <h2>${data.title}</h2>
+                    <img src="${data.image}" alt="${data.title}" style="max-width: 300px;">
+                    <p>Price: $${data.price}</p>
+                    <p>Category: ${data.category}</p>
+                    <p>Description: ${data.description}</p>
+                `;
+                productDetailsContainer.innerHTML = productTab;
+            })
+            .catch(error => {
+                itemDetails.textContent = `Error fetching item details: ${error.message}.`;
+                console.error(error);
+            });
+    </script>
+</body>
+</html>
